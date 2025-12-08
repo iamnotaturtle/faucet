@@ -32,32 +32,34 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
   const abi = getContractABI()
 
   // Read contract info
+  const isContractAddressValid = !!contractAddress && contractAddress.length === 42 && contractAddress.startsWith('0x')
+  
   const { data: name } = useReadContract({
-    address: contractAddress as `0x${string}`,
+    address: isContractAddressValid ? (contractAddress as `0x${string}`) : undefined,
     abi,
     functionName: 'name',
-    query: { enabled: !!contractAddress && contractAddress.length === 42 },
+    query: { enabled: isContractAddressValid },
   })
 
   const { data: symbol } = useReadContract({
-    address: contractAddress as `0x${string}`,
+    address: isContractAddressValid ? (contractAddress as `0x${string}`) : undefined,
     abi,
     functionName: 'symbol',
-    query: { enabled: !!contractAddress && contractAddress.length === 42 },
+    query: { enabled: isContractAddressValid },
   })
 
   const { data: decimals } = useReadContract({
-    address: contractAddress as `0x${string}`,
+    address: isContractAddressValid ? (contractAddress as `0x${string}`) : undefined,
     abi,
     functionName: 'decimals',
-    query: { enabled: !!contractAddress && contractAddress.length === 42 },
+    query: { enabled: isContractAddressValid },
   })
 
-  const { data: totalSupply } = useReadContract({
-    address: contractAddress as `0x${string}`,
+  const { data: totalSupply, error: totalSupplyError, isLoading: isLoadingTotalSupply } = useReadContract({
+    address: isContractAddressValid ? (contractAddress as `0x${string}`) : undefined,
     abi,
     functionName: 'totalSupply',
-    query: { enabled: !!contractAddress && contractAddress.length === 42 },
+    query: { enabled: isContractAddressValid },
   })
 
   // Update contract address when initialAddress changes
@@ -77,6 +79,18 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
     }
     const chainName = chainNames[chainId] || 'sepolia'
     return `https://${chainName}.etherscan.io/address/${address}`
+  }
+
+  const getEtherscanTxUrl = (txHash: string) => {
+    const chainNames: Record<number, string> = {
+      11155111: 'sepolia', // Sepolia
+      5: 'goerli', // Goerli
+      80001: 'mumbai', // Mumbai
+      84532: 'sepolia', // Base Sepolia
+      421614: 'sepolia', // Arbitrum Sepolia
+    }
+    const chainName = chainNames[chainId] || 'sepolia'
+    return `https://${chainName}.etherscan.io/tx/${txHash}`
   }
 
   const handleMint = async () => {
@@ -233,9 +247,15 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
           </div>
           <div style={{ marginBottom: '10px' }}>
             <strong>Total Supply:</strong>{' '}
-            {totalSupply && decimals
-              ? formatUnits(totalSupply as unknown as bigint, Number(decimals))
-              : 'Loading...'}
+            {totalSupplyError ? (
+              <span style={{ color: 'red' }}>Error: {totalSupplyError.message}</span>
+            ) : isLoadingTotalSupply ? (
+              'Loading...'
+            ) : totalSupply !== undefined && totalSupply !== null && decimals !== undefined ? (
+              formatUnits(totalSupply as unknown as bigint, Number(decimals))
+            ) : (
+              'Loading...'
+            )}
           </div>
           <div style={{ marginBottom: '10px' }}>
             <strong>Address:</strong>{' '}
@@ -265,7 +285,7 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
         </div>
       )}
 
-      {isSuccess && (
+      {isSuccess && hash && (
         <div
           style={{
             padding: '15px',
@@ -275,7 +295,15 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
             marginBottom: '20px',
           }}
         >
-          Transaction successful! Hash: {hash}
+          <strong>Transaction successful!</strong>{' '}
+          <a
+            href={getEtherscanTxUrl(hash)}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: '#155724', textDecoration: 'underline', wordBreak: 'break-all' }}
+          >
+            {hash}
+          </a>
         </div>
       )}
 

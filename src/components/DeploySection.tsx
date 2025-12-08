@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useAccount, useWaitForTransactionReceipt, usePublicClient, useWalletClient } from 'wagmi'
+import { useAccount, useWaitForTransactionReceipt, usePublicClient, useWalletClient, useChainId } from 'wagmi'
 import { encodeAbiParameters, parseAbiParameters } from 'viem'
 import { compileContract } from '../lib/contract'
 import ChainSelector from './ChainSelector'
@@ -11,6 +11,7 @@ interface DeploySectionProps {
 
 export default function DeploySection({ onDeploy }: DeploySectionProps) {
   const { address, isConnected } = useAccount()
+  const chainId = useChainId()
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
   const [hash, setHash] = useState<`0x${string}` | undefined>()
@@ -26,6 +27,30 @@ export default function DeploySection({ onDeploy }: DeploySectionProps) {
   const [isPending, setIsPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [deployedAddress, setDeployedAddress] = useState<string | null>(null)
+
+  const getEtherscanAddressUrl = (address: string) => {
+    const chainNames: Record<number, string> = {
+      11155111: 'sepolia', // Sepolia
+      5: 'goerli', // Goerli
+      80001: 'mumbai', // Mumbai
+      84532: 'sepolia', // Base Sepolia
+      421614: 'sepolia', // Arbitrum Sepolia
+    }
+    const chainName = chainNames[chainId] || 'sepolia'
+    return `https://${chainName}.etherscan.io/address/${address}`
+  }
+
+  const getEtherscanTxUrl = (txHash: string) => {
+    const chainNames: Record<number, string> = {
+      11155111: 'sepolia', // Sepolia
+      5: 'goerli', // Goerli
+      80001: 'mumbai', // Mumbai
+      84532: 'sepolia', // Base Sepolia
+      421614: 'sepolia', // Arbitrum Sepolia
+    }
+    const chainName = chainNames[chainId] || 'sepolia'
+    return `https://${chainName}.etherscan.io/tx/${txHash}`
+  }
 
   // Extract contract address from transaction receipt
   useEffect(() => {
@@ -179,21 +204,21 @@ export default function DeploySection({ onDeploy }: DeploySectionProps) {
         </div>
       )}
 
-      <button
-        onClick={handleDeploy}
-        disabled={isPending || isConfirming || isCompiling || !isConnected}
-        style={{
-          width: '100%',
-          padding: '15px',
-          background: isPending || isConfirming || isCompiling ? '#ccc' : '#667eea',
-          color: 'white',
-          border: 'none',
-          borderRadius: '8px',
-          fontSize: '18px',
-          fontWeight: 'bold',
-          cursor: isPending || isConfirming || isCompiling ? 'not-allowed' : 'pointer',
-        }}
-      >
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+        <button
+          onClick={handleDeploy}
+          disabled={isPending || isConfirming || isCompiling || !isConnected}
+          style={{
+            padding: '15px',
+            background: isPending || isConfirming || isCompiling ? '#ccc' : '#667eea',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '18px',
+            fontWeight: 'bold',
+            cursor: isPending || isConfirming || isCompiling ? 'not-allowed' : 'pointer',
+          }}
+        >
         {isCompiling
           ? 'Compiling...'
           : isPending
@@ -201,17 +226,36 @@ export default function DeploySection({ onDeploy }: DeploySectionProps) {
           : isConfirming
           ? 'Deploying...'
           : 'Deploy Contract'}
-      </button>
+        </button>
+      </div>
 
       {isSuccess && deployedAddress && (
         <div style={{ marginTop: '20px', padding: '15px', background: '#d4edda', color: '#155724', borderRadius: '8px' }}>
-          <div>Contract deployed successfully!</div>
-          <div style={{ marginTop: '10px', wordBreak: 'break-all' }}>
-            Address: {deployedAddress}
+          <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>Contract deployed successfully!</div>
+          <div style={{ marginTop: '10px' }}>
+            <strong>Address:</strong>{' '}
+            <a
+              href={getEtherscanAddressUrl(deployedAddress)}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#155724', textDecoration: 'underline', wordBreak: 'break-all' }}
+            >
+              {deployedAddress}
+            </a>
           </div>
-          <div style={{ marginTop: '5px', fontSize: '14px' }}>
-            Transaction: {hash}
-          </div>
+          {hash && (
+            <div style={{ marginTop: '5px', fontSize: '14px' }}>
+              <strong>Transaction:</strong>{' '}
+              <a
+                href={getEtherscanTxUrl(hash)}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#155724', textDecoration: 'underline', wordBreak: 'break-all' }}
+              >
+                {hash}
+              </a>
+            </div>
+          )}
         </div>
       )}
     </div>
