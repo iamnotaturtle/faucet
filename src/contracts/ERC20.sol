@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.30;
 
 interface IERC20 {
     function totalSupply() external view returns (uint256);
@@ -27,16 +27,12 @@ contract ERC20 is IERC20 {
     constructor(
         string memory _name,
         string memory _symbol,
-        uint8 _decimals,
-        uint256 _totalSupply
+        uint8 _decimals
     ) {
         name = _name;
         symbol = _symbol;
         decimals = _decimals;
         owner = msg.sender;
-        _totalSupply = _totalSupply * 10 ** _decimals;
-        _balances[msg.sender] = _totalSupply;
-        emit Transfer(address(0), msg.sender, _totalSupply);
     }
 
     function totalSupply() public view override returns (uint256) {
@@ -47,60 +43,58 @@ contract ERC20 is IERC20 {
         return _balances[account];
     }
 
-    function transfer(address to, uint256 amount) public override returns (bool) {
-        address owner = msg.sender;
-        _transfer(owner, to, amount);
+    function transfer(address _to, uint256 _value) public override returns (bool) {
+        _transfer(msg.sender, _to, _value);
         return true;
     }
 
-    function allowance(address owner, address spender) public view override returns (uint256) {
-        return _allowances[owner][spender];
+    function allowance(address _owner, address spender) public view override returns (uint256) {
+        return _allowances[_owner][spender];
     }
 
-    function approve(address spender, uint256 amount) public override returns (bool) {
-        address owner = msg.sender;
-        _approve(owner, spender, amount);
+    function approve(address spender, uint256 _value) public override returns (bool) {
+        _approve(msg.sender, spender, _value);
         return true;
     }
 
-    function transferFrom(address from, address to, uint256 amount) public override returns (bool) {
+    function transferFrom(address from, address to, uint256 _value) public override returns (bool) {
         address spender = msg.sender;
-        _spendAllowance(from, spender, amount);
-        _transfer(from, to, amount);
+        _spendAllowance(from, spender, _value);
+        _transfer(from, to, _value);
         return true;
     }
 
-    function mint(address to, uint256 amount) public {
+    function mint(address to, uint256 _value) public {
         require(msg.sender == owner, "Only owner can mint");
-        _totalSupply += amount;
-        _balances[to] += amount;
-        emit Transfer(address(0), to, amount);
+        _totalSupply += _value;
+        _balances[to] += _value;
+        emit Transfer(address(0), to, _value);
     }
 
-    function _transfer(address from, address to, uint256 amount) internal {
+    function _transfer(address from, address to, uint256 _value) internal {
         require(from != address(0), "ERC20: transfer from the zero address");
         require(to != address(0), "ERC20: transfer to the zero address");
 
         uint256 fromBalance = _balances[from];
-        require(fromBalance >= amount, "ERC20: transfer amount exceeds balance");
+        require(fromBalance >= _value, "ERC20: transfer value exceeds balance");
         unchecked {
-            _balances[from] = fromBalance - amount;
-            _balances[to] += amount;
+            _balances[from] = fromBalance - _value;
+            _balances[to] += _value;
         }
 
-        emit Transfer(from, to, amount);
+        emit Transfer(from, to, _value);
     }
 
-    function _approve(address owner, address spender, uint256 amount) internal {
-        require(owner != address(0), "ERC20: approve from the zero address");
+    function _approve(address _owner, address spender, uint256 amount) internal {
+        require(_owner != address(0), "ERC20: approve from the zero address");
         require(spender != address(0), "ERC20: approve to the zero address");
 
         _allowances[owner][spender] = amount;
         emit Approval(owner, spender, amount);
     }
 
-    function _spendAllowance(address owner, address spender, uint256 amount) internal {
-        uint256 currentAllowance = allowance(owner, spender);
+    function _spendAllowance(address _owner, address spender, uint256 amount) internal {
+        uint256 currentAllowance = allowance(_owner, spender);
         if (currentAllowance != type(uint256).max) {
             require(currentAllowance >= amount, "ERC20: insufficient allowance");
             unchecked {
@@ -109,4 +103,3 @@ contract ERC20 is IERC20 {
         }
     }
 }
-
