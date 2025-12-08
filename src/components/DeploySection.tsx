@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAccount, useWaitForTransactionReceipt, usePublicClient, useWalletClient, useChainId } from 'wagmi'
 import { encodeAbiParameters, parseAbiParameters } from 'viem'
-import { compileContract } from '../lib/contract'
+import { compileContract, compileFaucetContract } from '../lib/contract'
 import ChainSelector from './ChainSelector'
 import WalletButton from './WalletButton'
 
@@ -23,6 +23,7 @@ export default function DeploySection({ onDeploy }: DeploySectionProps) {
   const [symbol, setSymbol] = useState('MTK')
   const [decimals, setDecimals] = useState(18)
   const [totalSupply, setTotalSupply] = useState('1000000')
+  const [isFaucet, setIsFaucet] = useState(false)
   const [isCompiling, setIsCompiling] = useState(false)
   const [isPending, setIsPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -80,8 +81,10 @@ export default function DeploySection({ onDeploy }: DeploySectionProps) {
     setIsCompiling(true)
 
     try {
-      // Compile contract
-      const { bytecode } = await compileContract()
+      // Compile contract (regular or faucet based on checkbox)
+      const { bytecode } = isFaucet 
+        ? await compileFaucetContract()
+        : await compileContract()
 
       // Calculate total supply with decimals
       const totalSupplyBigInt = BigInt(totalSupply) * BigInt(10 ** decimals)
@@ -237,6 +240,34 @@ export default function DeploySection({ onDeploy }: DeploySectionProps) {
             backgroundColor: '#f8f9fa',
           }}
         />
+      </div>
+
+      <div style={{ marginBottom: '24px' }}>
+        <label style={{ 
+          display: 'flex', 
+          alignItems: 'center',
+          cursor: 'pointer',
+          gap: '10px'
+        }}>
+          <input
+            type="checkbox"
+            checked={isFaucet}
+            onChange={(e) => setIsFaucet(e.target.checked)}
+            style={{
+              width: '18px',
+              height: '18px',
+              cursor: 'pointer',
+            }}
+          />
+          <span style={{ 
+            fontWeight: 600, 
+            color: '#2d3748',
+            fontSize: '14px',
+            letterSpacing: '0.01em'
+          }}>
+            Enable as a faucet
+          </span>
+        </label>
       </div>
 
       {error && (

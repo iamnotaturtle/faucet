@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useChainId, usePublicClient } from 'wagmi'
 import { formatUnits, parseUnits } from 'viem'
 import { getContractABI } from '../lib/contract'
@@ -28,8 +28,21 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
   const [balanceAddress, setBalanceAddress] = useState('')
   const [balance, setBalance] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [hasMoneyPweese, setHasMoneyPweese] = useState<boolean | null>(null)
 
   const abi = getContractABI()
+  
+  // Extended ABI that includes money_pweese function
+  const extendedAbi = useMemo(() => [
+    ...getContractABI(),
+    {
+      inputs: [],
+      name: 'money_pweese',
+      outputs: [],
+      stateMutability: 'nonpayable',
+      type: 'function',
+    },
+  ], [])
 
   // Read contract info
   const isContractAddressValid = !!contractAddress && contractAddress.length === 42 && contractAddress.startsWith('0x')
@@ -68,6 +81,55 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
       setContractAddress(initialAddress)
     }
   }, [initialAddress])
+
+  // Check if contract supports money_pweese function
+  useEffect(() => {
+    const checkMoneyPweese = async () => {
+      if (!isContractAddressValid || !publicClient || !address) {
+        setHasMoneyPweese(null)
+        return
+      }
+
+      try {
+        // Try to simulate a call to money_pweese to see if it exists
+        await publicClient.simulateContract({
+          address: contractAddress as `0x${string}`,
+          abi: extendedAbi,
+          functionName: 'money_pweese',
+          account: address as `0x${string}`,
+        })
+        setHasMoneyPweese(true)
+      } catch (err: any) {
+        // If the function doesn't exist, the error will indicate that
+        // Check for common "function not found" errors
+        const errorMessage = err?.message?.toLowerCase() || ''
+        const errorCode = err?.code || ''
+        const errorName = err?.name || ''
+        
+        // Check for function selector errors or invalid function errors
+        if (
+          errorMessage.includes('function') && 
+          (errorMessage.includes('not found') || 
+           errorMessage.includes('does not exist') ||
+           errorMessage.includes('invalid function') ||
+           errorMessage.includes('function selector'))
+        ) {
+          setHasMoneyPweese(false)
+        } else if (
+          errorCode === 'UNPREDICTABLE_GAS_LIMIT' ||
+          errorName === 'ContractFunctionExecutionError'
+        ) {
+          // These errors usually mean the function exists but failed for other reasons
+          setHasMoneyPweese(true)
+        } else {
+          // For other errors, assume function exists (could be insufficient balance, etc.)
+          setHasMoneyPweese(true)
+        }
+      }
+    }
+
+    checkMoneyPweese()
+  }, [contractAddress, isContractAddressValid, publicClient, address, extendedAbi])
 
   const getEtherscanUrl = (address: string) => {
     const chainNames: Record<number, string> = {
@@ -179,6 +241,29 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
       }
     } catch (err: any) {
       setError(err.message || 'Failed to check balance')
+      console.error(err)
+    }
+  }
+
+  const handleMoneyPweese = async () => {
+    if (!isConnected || !address) {
+      setError('Please connect your wallet')
+      return
+    }
+    if (!contractAddress || contractAddress.length !== 42) {
+      setError('Invalid contract address')
+      return
+    }
+
+    setError(null)
+    try {
+      writeContract({
+        address: contractAddress as `0x${string}`,
+        abi: extendedAbi,
+        functionName: 'money_pweese',
+      })
+    } catch (err: any) {
+      setError(err.message || 'Failed to call money_pweese')
       console.error(err)
     }
   }
@@ -384,6 +469,24 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
             }}
           >
             Check Balance
+          </button>
+          <button
+            onClick={handleMoneyPweese}
+            disabled={!hasMoneyPweese || isPending || isConfirming || !isConnected}
+            style={{
+              padding: '14px 28px',
+              background: !hasMoneyPweese || isPending || isConfirming ? '#cbd5e0' : '#f59e0b',
+              color: 'white',
+              border: 'none',
+              borderRadius: '10px',
+              fontSize: '16px',
+              fontWeight: 600,
+              cursor: !hasMoneyPweese || isPending || isConfirming ? 'not-allowed' : 'pointer',
+              boxShadow: !hasMoneyPweese || isPending || isConfirming ? 'none' : '0 4px 12px rgba(245, 158, 11, 0.3)',
+              opacity: hasMoneyPweese === false ? 0.5 : 1,
+            }}
+          >
+            Money Pweese
           </button>
         </div>
       )}
