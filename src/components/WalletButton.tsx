@@ -35,7 +35,7 @@ export default function WalletButton() {
               textDecoration: 'underline',
               fontSize: '14px',
               wordBreak: 'break-all',
-              display: 'block',
+              display: 'inline-block',
             }}
           >
             {address}
