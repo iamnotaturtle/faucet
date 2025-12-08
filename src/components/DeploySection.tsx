@@ -22,7 +22,6 @@ export default function DeploySection({ onDeploy }: DeploySectionProps) {
   const [name, setName] = useState('MyToken')
   const [symbol, setSymbol] = useState('MTK')
   const [decimals, setDecimals] = useState(18)
-  const [totalSupply, setTotalSupply] = useState('1000000')
   const [isFaucet, setIsFaucet] = useState(false)
   const [isCompiling, setIsCompiling] = useState(false)
   const [isPending, setIsPending] = useState(false)
@@ -86,14 +85,12 @@ export default function DeploySection({ onDeploy }: DeploySectionProps) {
         ? await compileFaucetContract()
         : await compileContract()
 
-      const totalSupplyBigInt = BigInt(totalSupply)
-
       setIsCompiling(false)
       setIsPending(true)
 
       // Encode constructor parameters and combine with bytecode
-      const constructorAbi = parseAbiParameters('string,string,uint8,uint256')
-      const encodedArgs = encodeAbiParameters(constructorAbi, [name, symbol, decimals, totalSupplyBigInt])
+      const constructorAbi = parseAbiParameters('string,string,uint8')
+      const encodedArgs = encodeAbiParameters(constructorAbi, [name, symbol, decimals])
       const deploymentBytecode = `${bytecode}${encodedArgs.slice(2)}` as `0x${string}`
 
       // Deploy contract by sending transaction with bytecode
@@ -204,32 +201,6 @@ export default function DeploySection({ onDeploy }: DeploySectionProps) {
           onChange={(e) => setDecimals(Number(e.target.value))}
           min="0"
           max="18"
-          style={{
-            width: '100%',
-            padding: '12px 16px',
-            borderRadius: '8px',
-            border: '1px solid #e2e8f0',
-            fontSize: '15px',
-            backgroundColor: '#f8f9fa',
-          }}
-        />
-      </div>
-
-      <div style={{ marginBottom: '24px' }}>
-        <label style={{ 
-          display: 'block', 
-          marginBottom: '10px', 
-          fontWeight: 600, 
-          color: '#2d3748',
-          fontSize: '14px',
-          letterSpacing: '0.01em'
-        }}>
-          Total Supply:
-        </label>
-        <input
-          type="text"
-          value={totalSupply}
-          onChange={(e) => setTotalSupply(e.target.value)}
           style={{
             width: '100%',
             padding: '12px 16px',
