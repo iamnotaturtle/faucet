@@ -96,6 +96,7 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
           address: contractAddress as `0x${string}`,
           abi: extendedAbi,
           functionName: 'money_pweese',
+          args: [],
           account: address as `0x${string}`,
         })
         setHasMoneyPweese(true)
@@ -261,6 +262,7 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
         address: contractAddress as `0x${string}`,
         abi: extendedAbi,
         functionName: 'money_pweese',
+        args: [],
       })
     } catch (err: any) {
       setError(err.message || 'Failed to call money_pweese')
