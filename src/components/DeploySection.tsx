@@ -113,19 +113,35 @@ export default function DeploySection({ onDeploy }: DeploySectionProps) {
     <div
       style={{
         background: 'white',
-        padding: '30px',
-        borderRadius: '12px',
+        padding: '40px',
+        borderRadius: '16px',
         marginBottom: '30px',
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
       }}
     >
-      <h2 style={{ marginBottom: '20px', color: '#333' }}>Deploy ERC20 Contract</h2>
+      <h2 style={{ 
+        marginBottom: '30px', 
+        color: '#1a1a1a',
+        fontSize: '1.75rem',
+        fontWeight: 600,
+        letterSpacing: '-0.01em'
+      }}>
+        Deploy ERC20 Contract
+      </h2>
       
       <WalletButton />
       <ChainSelector />
 
-      <div style={{ marginBottom: '15px' }}>
-        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#333' }}>
+      <div style={{ marginBottom: '20px' }}>
+        <label style={{ 
+          display: 'block', 
+          marginBottom: '10px', 
+          fontWeight: 600, 
+          color: '#2d3748',
+          fontSize: '14px',
+          letterSpacing: '0.01em'
+        }}>
           Token Name:
         </label>
         <input
@@ -134,16 +150,24 @@ export default function DeploySection({ onDeploy }: DeploySectionProps) {
           onChange={(e) => setName(e.target.value)}
           style={{
             width: '100%',
-            padding: '10px',
+            padding: '12px 16px',
             borderRadius: '8px',
-            border: '1px solid #ccc',
-            fontSize: '16px',
+            border: '1px solid #e2e8f0',
+            fontSize: '15px',
+            backgroundColor: '#f8f9fa',
           }}
         />
       </div>
 
-      <div style={{ marginBottom: '15px' }}>
-        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#333' }}>
+      <div style={{ marginBottom: '20px' }}>
+        <label style={{ 
+          display: 'block', 
+          marginBottom: '10px', 
+          fontWeight: 600, 
+          color: '#2d3748',
+          fontSize: '14px',
+          letterSpacing: '0.01em'
+        }}>
           Symbol:
         </label>
         <input
@@ -152,16 +176,24 @@ export default function DeploySection({ onDeploy }: DeploySectionProps) {
           onChange={(e) => setSymbol(e.target.value)}
           style={{
             width: '100%',
-            padding: '10px',
+            padding: '12px 16px',
             borderRadius: '8px',
-            border: '1px solid #ccc',
-            fontSize: '16px',
+            border: '1px solid #e2e8f0',
+            fontSize: '15px',
+            backgroundColor: '#f8f9fa',
           }}
         />
       </div>
 
-      <div style={{ marginBottom: '15px' }}>
-        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#333' }}>
+      <div style={{ marginBottom: '20px' }}>
+        <label style={{ 
+          display: 'block', 
+          marginBottom: '10px', 
+          fontWeight: 600, 
+          color: '#2d3748',
+          fontSize: '14px',
+          letterSpacing: '0.01em'
+        }}>
           Decimals:
         </label>
         <input
@@ -172,16 +204,24 @@ export default function DeploySection({ onDeploy }: DeploySectionProps) {
           max="18"
           style={{
             width: '100%',
-            padding: '10px',
+            padding: '12px 16px',
             borderRadius: '8px',
-            border: '1px solid #ccc',
-            fontSize: '16px',
+            border: '1px solid #e2e8f0',
+            fontSize: '15px',
+            backgroundColor: '#f8f9fa',
           }}
         />
       </div>
 
-      <div style={{ marginBottom: '20px' }}>
-        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#333' }}>
+      <div style={{ marginBottom: '24px' }}>
+        <label style={{ 
+          display: 'block', 
+          marginBottom: '10px', 
+          fontWeight: 600, 
+          color: '#2d3748',
+          fontSize: '14px',
+          letterSpacing: '0.01em'
+        }}>
           Total Supply:
         </label>
         <input
@@ -190,16 +230,25 @@ export default function DeploySection({ onDeploy }: DeploySectionProps) {
           onChange={(e) => setTotalSupply(e.target.value)}
           style={{
             width: '100%',
-            padding: '10px',
+            padding: '12px 16px',
             borderRadius: '8px',
-            border: '1px solid #ccc',
-            fontSize: '16px',
+            border: '1px solid #e2e8f0',
+            fontSize: '15px',
+            backgroundColor: '#f8f9fa',
           }}
         />
       </div>
 
       {error && (
-        <div style={{ padding: '15px', background: '#f8d7da', color: '#721c24', borderRadius: '8px', marginBottom: '20px' }}>
+        <div style={{ 
+          padding: '16px', 
+          background: '#fee', 
+          color: '#c53030', 
+          borderRadius: '8px', 
+          marginBottom: '24px',
+          border: '1px solid #feb2b2',
+          fontSize: '14px'
+        }}>
           {error}
         </div>
       )}
@@ -209,14 +258,15 @@ export default function DeploySection({ onDeploy }: DeploySectionProps) {
           onClick={handleDeploy}
           disabled={isPending || isConfirming || isCompiling || !isConnected}
           style={{
-            padding: '15px',
-            background: isPending || isConfirming || isCompiling ? '#ccc' : '#667eea',
+            padding: '14px 32px',
+            background: isPending || isConfirming || isCompiling ? '#cbd5e0' : '#667eea',
             color: 'white',
             border: 'none',
-            borderRadius: '8px',
-            fontSize: '18px',
-            fontWeight: 'bold',
+            borderRadius: '10px',
+            fontSize: '16px',
+            fontWeight: 600,
             cursor: isPending || isConfirming || isCompiling ? 'not-allowed' : 'pointer',
+            boxShadow: isPending || isConfirming || isCompiling ? 'none' : '0 4px 12px rgba(102, 126, 234, 0.3)',
           }}
         >
         {isCompiling
@@ -230,27 +280,34 @@ export default function DeploySection({ onDeploy }: DeploySectionProps) {
       </div>
 
       {isSuccess && deployedAddress && (
-        <div style={{ marginTop: '20px', padding: '15px', background: '#d4edda', color: '#155724', borderRadius: '8px' }}>
-          <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>Contract deployed successfully!</div>
-          <div style={{ marginTop: '10px' }}>
-            <strong>Address:</strong>{' '}
+        <div style={{ 
+          marginTop: '24px', 
+          padding: '20px', 
+          background: '#f0fdf4', 
+          color: '#166534', 
+          borderRadius: '10px',
+          border: '1px solid #86efac'
+        }}>
+          <div style={{ fontWeight: 600, marginBottom: '12px', fontSize: '16px' }}>Contract deployed successfully!</div>
+          <div style={{ marginTop: '12px', fontSize: '14px' }}>
+            <strong style={{ display: 'block', marginBottom: '4px' }}>Address:</strong>
             <a
               href={getEtherscanAddressUrl(deployedAddress)}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: '#155724', textDecoration: 'underline', wordBreak: 'break-all' }}
+              style={{ color: '#16a34a', textDecoration: 'underline', wordBreak: 'break-all', fontSize: '13px' }}
             >
               {deployedAddress}
             </a>
           </div>
           {hash && (
-            <div style={{ marginTop: '5px', fontSize: '14px' }}>
-              <strong>Transaction:</strong>{' '}
+            <div style={{ marginTop: '10px', fontSize: '14px' }}>
+              <strong style={{ display: 'block', marginBottom: '4px' }}>Transaction:</strong>
               <a
                 href={getEtherscanTxUrl(hash)}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ color: '#155724', textDecoration: 'underline', wordBreak: 'break-all' }}
+                style={{ color: '#16a34a', textDecoration: 'underline', wordBreak: 'break-all', fontSize: '13px' }}
               >
                 {hash}
               </a>

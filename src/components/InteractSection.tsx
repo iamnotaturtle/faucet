@@ -198,17 +198,33 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
     <div
       style={{
         background: 'white',
-        padding: '30px',
-        borderRadius: '12px',
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        padding: '40px',
+        borderRadius: '16px',
+        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
       }}
     >
-      <h2 style={{ marginBottom: '20px', color: '#333' }}>Interact with Contract</h2>
+      <h2 style={{ 
+        marginBottom: '30px', 
+        color: '#1a1a1a',
+        fontSize: '1.75rem',
+        fontWeight: 600,
+        letterSpacing: '-0.01em'
+      }}>
+        Interact with Contract
+      </h2>
 
       <WalletButton />
 
-      <div style={{ marginBottom: '20px' }}>
-        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#333' }}>
+      <div style={{ marginBottom: '24px' }}>
+        <label style={{ 
+          display: 'block', 
+          marginBottom: '10px', 
+          fontWeight: 600, 
+          color: '#2d3748',
+          fontSize: '14px',
+          letterSpacing: '0.01em'
+        }}>
           Contract Address:
         </label>
         <input
@@ -218,10 +234,11 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
           placeholder="0x..."
           style={{
             width: '100%',
-            padding: '10px',
+            padding: '12px 16px',
             borderRadius: '8px',
-            border: '1px solid #ccc',
-            fontSize: '16px',
+            border: '1px solid #e2e8f0',
+            fontSize: '15px',
+            backgroundColor: '#f8f9fa',
           }}
         />
       </div>
@@ -229,26 +246,34 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
       {contractAddress && contractAddress.length === 42 && (
         <div
           style={{
-            padding: '20px',
+            padding: '24px',
             background: '#f8f9fa',
-            borderRadius: '8px',
-            marginBottom: '20px',
+            borderRadius: '12px',
+            marginBottom: '24px',
+            border: '1px solid #e2e8f0',
           }}
         >
-          <h3 style={{ marginBottom: '15px', color: '#333' }}>Contract Information</h3>
-          <div style={{ marginBottom: '10px' }}>
-            <strong>Name:</strong> {name || 'Loading...'}
+          <h3 style={{ 
+            marginBottom: '20px', 
+            color: '#1a1a1a',
+            fontSize: '1.25rem',
+            fontWeight: 600
+          }}>
+            Contract Information
+          </h3>
+          <div style={{ marginBottom: '12px', fontSize: '14px', color: '#4a5568' }}>
+            <strong style={{ color: '#2d3748', display: 'inline-block', minWidth: '120px' }}>Name:</strong> {name || 'Loading...'}
           </div>
-          <div style={{ marginBottom: '10px' }}>
-            <strong>Symbol:</strong> {symbol || 'Loading...'}
+          <div style={{ marginBottom: '12px', fontSize: '14px', color: '#4a5568' }}>
+            <strong style={{ color: '#2d3748', display: 'inline-block', minWidth: '120px' }}>Symbol:</strong> {symbol || 'Loading...'}
           </div>
-          <div style={{ marginBottom: '10px' }}>
-            <strong>Decimals:</strong> {decimals?.toString() || 'Loading...'}
+          <div style={{ marginBottom: '12px', fontSize: '14px', color: '#4a5568' }}>
+            <strong style={{ color: '#2d3748', display: 'inline-block', minWidth: '120px' }}>Decimals:</strong> {decimals?.toString() || 'Loading...'}
           </div>
-          <div style={{ marginBottom: '10px' }}>
-            <strong>Total Supply:</strong>{' '}
+          <div style={{ marginBottom: '12px', fontSize: '14px', color: '#4a5568' }}>
+            <strong style={{ color: '#2d3748', display: 'inline-block', minWidth: '120px' }}>Total Supply:</strong>{' '}
             {totalSupplyError ? (
-              <span style={{ color: 'red' }}>Error: {totalSupplyError.message}</span>
+              <span style={{ color: '#e53e3e' }}>Error: {totalSupplyError.message}</span>
             ) : isLoadingTotalSupply ? (
               'Loading...'
             ) : totalSupply !== undefined && totalSupply !== null && decimals !== undefined ? (
@@ -257,13 +282,13 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
               'Loading...'
             )}
           </div>
-          <div style={{ marginBottom: '10px' }}>
-            <strong>Address:</strong>{' '}
+          <div style={{ marginBottom: '12px', fontSize: '14px', color: '#4a5568' }}>
+            <strong style={{ color: '#2d3748', display: 'inline-block', minWidth: '120px' }}>Address:</strong>{' '}
             <a
               href={getEtherscanUrl(contractAddress)}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: '#667eea', textDecoration: 'none' }}
+              style={{ color: '#667eea', textDecoration: 'none', wordBreak: 'break-all' }}
             >
               {contractAddress}
             </a>
@@ -274,11 +299,13 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
       {error && (
         <div
           style={{
-            padding: '15px',
-            background: '#f8d7da',
-            color: '#721c24',
-            borderRadius: '8px',
-            marginBottom: '20px',
+            padding: '16px',
+            background: '#fee',
+            color: '#c53030',
+            borderRadius: '10px',
+            marginBottom: '24px',
+            border: '1px solid #feb2b2',
+            fontSize: '14px',
           }}
         >
           {error}
@@ -288,19 +315,20 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
       {isSuccess && hash && (
         <div
           style={{
-            padding: '15px',
-            background: '#d4edda',
-            color: '#155724',
-            borderRadius: '8px',
-            marginBottom: '20px',
+            padding: '20px',
+            background: '#f0fdf4',
+            color: '#166534',
+            borderRadius: '10px',
+            marginBottom: '24px',
+            border: '1px solid #86efac',
           }}
         >
-          <strong>Transaction successful!</strong>{' '}
+          <strong style={{ display: 'block', marginBottom: '8px', fontSize: '16px' }}>Transaction successful!</strong>
           <a
             href={getEtherscanTxUrl(hash)}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: '#155724', textDecoration: 'underline', wordBreak: 'break-all' }}
+            style={{ color: '#16a34a', textDecoration: 'underline', wordBreak: 'break-all', fontSize: '13px' }}
           >
             {hash}
           </a>
@@ -308,18 +336,19 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
       )}
 
       {!action && (
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
           <button
             onClick={() => setAction('mint')}
             style={{
-              padding: '15px 30px',
+              padding: '14px 28px',
               background: '#28a745',
               color: 'white',
               border: 'none',
-              borderRadius: '8px',
+              borderRadius: '10px',
               fontSize: '16px',
-              fontWeight: 'bold',
+              fontWeight: 600,
               cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(40, 167, 69, 0.3)',
             }}
           >
             Mint Tokens
@@ -327,14 +356,15 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
           <button
             onClick={() => setAction('transfer')}
             style={{
-              padding: '15px 30px',
-              background: '#007bff',
+              padding: '14px 28px',
+              background: '#667eea',
               color: 'white',
               border: 'none',
-              borderRadius: '8px',
+              borderRadius: '10px',
               fontSize: '16px',
-              fontWeight: 'bold',
+              fontWeight: 600,
               cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)',
             }}
           >
             Transfer Tokens
@@ -342,14 +372,15 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
           <button
             onClick={() => setAction('balance')}
             style={{
-              padding: '15px 30px',
+              padding: '14px 28px',
               background: '#17a2b8',
               color: 'white',
               border: 'none',
-              borderRadius: '8px',
+              borderRadius: '10px',
               fontSize: '16px',
-              fontWeight: 'bold',
+              fontWeight: 600,
               cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(23, 162, 184, 0.3)',
             }}
           >
             Check Balance
@@ -358,10 +389,17 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
       )}
 
       {action === 'mint' && (
-        <div style={{ marginTop: '20px', padding: '20px', background: '#f8f9fa', borderRadius: '8px' }}>
-          <h3 style={{ marginBottom: '15px', color: '#333' }}>Mint Tokens</h3>
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#333' }}>
+        <div style={{ marginTop: '24px', padding: '24px', background: '#f8f9fa', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+          <h3 style={{ marginBottom: '20px', color: '#1a1a1a', fontSize: '1.25rem', fontWeight: 600 }}>Mint Tokens</h3>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '10px', 
+              fontWeight: 600, 
+              color: '#2d3748',
+              fontSize: '14px',
+              letterSpacing: '0.01em'
+            }}>
               Recipient Address:
             </label>
             <input
@@ -371,15 +409,23 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
               placeholder="0x..."
               style={{
                 width: '100%',
-                padding: '10px',
+                padding: '12px 16px',
                 borderRadius: '8px',
-                border: '1px solid #ccc',
-                fontSize: '16px',
+                border: '1px solid #e2e8f0',
+                fontSize: '15px',
+                backgroundColor: 'white',
               }}
             />
           </div>
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#333' }}>
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '10px', 
+              fontWeight: 600, 
+              color: '#2d3748',
+              fontSize: '14px',
+              letterSpacing: '0.01em'
+            }}>
               Amount:
             </label>
             <input
@@ -389,26 +435,28 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
               placeholder="1000"
               style={{
                 width: '100%',
-                padding: '10px',
+                padding: '12px 16px',
                 borderRadius: '8px',
-                border: '1px solid #ccc',
-                fontSize: '16px',
+                border: '1px solid #e2e8f0',
+                fontSize: '15px',
+                backgroundColor: 'white',
               }}
             />
           </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
             <button
               onClick={handleMint}
               disabled={isPending || isConfirming || !isConnected}
               style={{
                 padding: '12px 24px',
-                background: isPending || isConfirming ? '#ccc' : '#28a745',
+                background: isPending || isConfirming ? '#cbd5e0' : '#28a745',
                 color: 'white',
                 border: 'none',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 fontSize: '16px',
-                fontWeight: 'bold',
+                fontWeight: 600,
                 cursor: isPending || isConfirming ? 'not-allowed' : 'pointer',
+                boxShadow: isPending || isConfirming ? 'none' : '0 4px 12px rgba(40, 167, 69, 0.3)',
               }}
             >
               {isPending ? 'Confirm in Wallet...' : isConfirming ? 'Minting...' : 'Mint'}
@@ -417,13 +465,14 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
               onClick={resetAction}
               style={{
                 padding: '12px 24px',
-                background: '#6c757d',
+                background: '#718096',
                 color: 'white',
                 border: 'none',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 fontSize: '16px',
-                fontWeight: 'bold',
+                fontWeight: 600,
                 cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(113, 128, 150, 0.3)',
               }}
             >
               Cancel
@@ -433,10 +482,17 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
       )}
 
       {action === 'transfer' && (
-        <div style={{ marginTop: '20px', padding: '20px', background: '#f8f9fa', borderRadius: '8px' }}>
-          <h3 style={{ marginBottom: '15px', color: '#333' }}>Transfer Tokens</h3>
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#333' }}>
+        <div style={{ marginTop: '24px', padding: '24px', background: '#f8f9fa', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+          <h3 style={{ marginBottom: '20px', color: '#1a1a1a', fontSize: '1.25rem', fontWeight: 600 }}>Transfer Tokens</h3>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '10px', 
+              fontWeight: 600, 
+              color: '#2d3748',
+              fontSize: '14px',
+              letterSpacing: '0.01em'
+            }}>
               Recipient Address:
             </label>
             <input
@@ -446,15 +502,23 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
               placeholder="0x..."
               style={{
                 width: '100%',
-                padding: '10px',
+                padding: '12px 16px',
                 borderRadius: '8px',
-                border: '1px solid #ccc',
-                fontSize: '16px',
+                border: '1px solid #e2e8f0',
+                fontSize: '15px',
+                backgroundColor: 'white',
               }}
             />
           </div>
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#333' }}>
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '10px', 
+              fontWeight: 600, 
+              color: '#2d3748',
+              fontSize: '14px',
+              letterSpacing: '0.01em'
+            }}>
               Amount:
             </label>
             <input
@@ -464,26 +528,28 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
               placeholder="1000"
               style={{
                 width: '100%',
-                padding: '10px',
+                padding: '12px 16px',
                 borderRadius: '8px',
-                border: '1px solid #ccc',
-                fontSize: '16px',
+                border: '1px solid #e2e8f0',
+                fontSize: '15px',
+                backgroundColor: 'white',
               }}
             />
           </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
             <button
               onClick={handleTransfer}
               disabled={isPending || isConfirming || !isConnected}
               style={{
                 padding: '12px 24px',
-                background: isPending || isConfirming ? '#ccc' : '#007bff',
+                background: isPending || isConfirming ? '#cbd5e0' : '#667eea',
                 color: 'white',
                 border: 'none',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 fontSize: '16px',
-                fontWeight: 'bold',
+                fontWeight: 600,
                 cursor: isPending || isConfirming ? 'not-allowed' : 'pointer',
+                boxShadow: isPending || isConfirming ? 'none' : '0 4px 12px rgba(102, 126, 234, 0.3)',
               }}
             >
               {isPending ? 'Confirm in Wallet...' : isConfirming ? 'Transferring...' : 'Transfer'}
@@ -492,13 +558,14 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
               onClick={resetAction}
               style={{
                 padding: '12px 24px',
-                background: '#6c757d',
+                background: '#718096',
                 color: 'white',
                 border: 'none',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 fontSize: '16px',
-                fontWeight: 'bold',
+                fontWeight: 600,
                 cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(113, 128, 150, 0.3)',
               }}
             >
               Cancel
@@ -508,10 +575,17 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
       )}
 
       {action === 'balance' && (
-        <div style={{ marginTop: '20px', padding: '20px', background: '#f8f9fa', borderRadius: '8px' }}>
-          <h3 style={{ marginBottom: '15px', color: '#333' }}>Check Balance</h3>
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#333' }}>
+        <div style={{ marginTop: '24px', padding: '24px', background: '#f8f9fa', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+          <h3 style={{ marginBottom: '20px', color: '#1a1a1a', fontSize: '1.25rem', fontWeight: 600 }}>Check Balance</h3>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '10px', 
+              fontWeight: 600, 
+              color: '#2d3748',
+              fontSize: '14px',
+              letterSpacing: '0.01em'
+            }}>
               Address:
             </label>
             <input
@@ -521,27 +595,31 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
               placeholder="0x..."
               style={{
                 width: '100%',
-                padding: '10px',
+                padding: '12px 16px',
                 borderRadius: '8px',
-                border: '1px solid #ccc',
-                fontSize: '16px',
+                border: '1px solid #e2e8f0',
+                fontSize: '15px',
+                backgroundColor: 'white',
               }}
             />
           </div>
           {balance !== null && (
             <div
               style={{
-                padding: '15px',
-                background: '#d1ecf1',
-                color: '#0c5460',
-                borderRadius: '8px',
-                marginBottom: '15px',
+                padding: '16px',
+                background: '#e6fffa',
+                color: '#234e52',
+                borderRadius: '10px',
+                marginBottom: '20px',
+                border: '1px solid #81e6d9',
+                fontSize: '15px',
+                fontWeight: 500,
               }}
             >
               Balance: {balance} {symbol || ''}
             </div>
           )}
-          <div style={{ display: 'flex', gap: '10px' }}>
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
             <button
               onClick={handleCheckBalance}
               style={{
@@ -549,10 +627,11 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
                 background: '#17a2b8',
                 color: 'white',
                 border: 'none',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 fontSize: '16px',
-                fontWeight: 'bold',
+                fontWeight: 600,
                 cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(23, 162, 184, 0.3)',
               }}
             >
               Check Balance
@@ -561,13 +640,14 @@ export default function InteractSection({ initialAddress }: InteractSectionProps
               onClick={resetAction}
               style={{
                 padding: '12px 24px',
-                background: '#6c757d',
+                background: '#718096',
                 color: 'white',
                 border: 'none',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 fontSize: '16px',
-                fontWeight: 'bold',
+                fontWeight: 600,
                 cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(113, 128, 150, 0.3)',
               }}
             >
               Cancel

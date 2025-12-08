@@ -48,10 +48,11 @@ export default function WalletButton() {
             background: '#dc3545',
             color: 'white',
             border: 'none',
-            borderRadius: '8px',
+            borderRadius: '10px',
             cursor: 'pointer',
             fontSize: '16px',
-            fontWeight: 'bold',
+            fontWeight: 600,
+            boxShadow: '0 4px 12px rgba(220, 53, 69, 0.3)',
           }}
         >
           Disconnect wallet
@@ -68,11 +69,12 @@ export default function WalletButton() {
         background: '#28a745',
         color: 'white',
         border: 'none',
-        borderRadius: '8px',
+        borderRadius: '10px',
         cursor: 'pointer',
         fontSize: '16px',
-        fontWeight: 'bold',
+        fontWeight: 600,
         marginBottom: '20px',
+        boxShadow: '0 4px 12px rgba(40, 167, 69, 0.3)',
       }}
     >
       Connect Wallet

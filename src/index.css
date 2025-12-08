@@ -10,9 +10,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: black;
   min-height: 100vh;
-  padding: 20px;
+  padding: 40px 20px;
+  line-height: 1.6;
 }
 
 #root {
@@ -23,6 +24,11 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+h1, h2, h3 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 /* Responsive design */
@@ -51,16 +57,35 @@ select:focus {
   outline: none;
   border-color: #667eea !important;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  transition: all 0.2s ease;
+}
+
+input, select {
+  transition: all 0.2s ease;
 }
 
 /* Button hover effects */
+button:not(:disabled) {
+  transition: all 0.2s ease;
+}
+
 button:not(:disabled):hover {
   opacity: 0.9;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 button:not(:disabled):active {
   transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Link styles */
+a {
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  opacity: 0.8;
 }
 
