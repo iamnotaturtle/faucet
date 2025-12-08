@@ -86,8 +86,7 @@ export default function DeploySection({ onDeploy }: DeploySectionProps) {
         ? await compileFaucetContract()
         : await compileContract()
 
-      // Calculate total supply with decimals
-      const totalSupplyBigInt = BigInt(totalSupply) * BigInt(10 ** decimals)
+      const totalSupplyBigInt = BigInt(totalSupply)
 
       setIsCompiling(false)
       setIsPending(true)
