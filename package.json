@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "compile-contract": "node scripts/compile-contract.js",
+    "verify-contract": "node scripts/verify-contract.js",
     "dev": "vite",
     "build": "npm run compile-contract && tsc && vite build",
     "preview": "vite preview",
