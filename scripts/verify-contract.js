@@ -78,18 +78,34 @@ function getChainConfig(chainInput) {
   throw new Error(`Unsupported chain: ${chainInput}. Supported chains: ${Object.keys(CHAIN_ALIASES).join(', ')}`)
 }
 
-function encodeConstructorArgs(argsString) {
+const VAULT_CONTRACTS = ['ERC4626Vault', 'ERC7540Vault']
+
+function encodeConstructorArgs(argsString, contractName) {
   if (!argsString) {
     return ''
   }
   
-  // Parse constructor arguments: "MyToken,MTK,18"
   const args = argsString.split(',').map(arg => arg.trim())
   
   if (args.length !== 3) {
-    throw new Error('Constructor arguments must be in format: "name,symbol,decimals"')
+    throw new Error(
+      VAULT_CONTRACTS.includes(contractName)
+        ? 'Constructor arguments must be in format: "asset,name,symbol"'
+        : 'Constructor arguments must be in format: "name,symbol,decimals"'
+    )
+  }
+
+  if (VAULT_CONTRACTS.includes(contractName)) {
+    const [asset, name, symbol] = args
+    if (!/^0x[a-fA-F0-9]{40}$/.test(asset)) {
+      throw new Error(`Invalid asset address: ${asset}`)
+    }
+    const abiParams = parseAbiParameters('address,string,string')
+    const encoded = encodeAbiParameters(abiParams, [asset, name, symbol])
+    return encoded.slice(2)
   }
   
+  // Parse constructor arguments: "MyToken,MTK,18"
   const [name, symbol, decimals] = args
   const decimalsNum = parseInt(decimals, 10)
   
@@ -281,19 +297,19 @@ async function main() {
   // Validate required arguments
   if (!args.address) {
     console.error('Error: --address is required')
-    console.error('Usage: npm run verify-contract -- --address <address> --chain <chain> --contract <ERC20|ERC20Faucet> [--constructor-args "name,symbol,decimals"]')
+    console.error('Usage: npm run verify-contract -- --address <address> --chain <chain> --contract <ERC20|ERC20Faucet|ERC4626Vault|ERC7540Vault> [--constructor-args "..."]')
     process.exit(1)
   }
   
   if (!args.chain) {
     console.error('Error: --chain is required')
-    console.error('Usage: npm run verify-contract -- --address <address> --chain <chain> --contract <ERC20|ERC20Faucet> [--constructor-args "name,symbol,decimals"]')
+    console.error('Usage: npm run verify-contract -- --address <address> --chain <chain> --contract <ERC20|ERC20Faucet|ERC4626Vault|ERC7540Vault> [--constructor-args "..."]')
     process.exit(1)
   }
   
-  if (!args.contract || !['ERC20', 'ERC20Faucet'].includes(args.contract)) {
-    console.error('Error: --contract must be either ERC20 or ERC20Faucet')
-    console.error('Usage: npm run verify-contract -- --address <address> --chain <chain> --contract <ERC20|ERC20Faucet> [--constructor-args "name,symbol,decimals"]')
+  if (!args.contract || !['ERC20', 'ERC20Faucet', 'ERC4626Vault', 'ERC7540Vault'].includes(args.contract)) {
+    console.error('Error: --contract must be ERC20, ERC20Faucet, ERC4626Vault, or ERC7540Vault')
+    console.error('Usage: npm run verify-contract -- --address <address> --chain <chain> --contract <ERC20|ERC20Faucet|ERC4626Vault|ERC7540Vault> [--constructor-args "..."]')
     process.exit(1)
   }
   
@@ -319,7 +335,7 @@ async function main() {
     let constructorArgs = ''
     if (args['constructor-args']) {
       console.log(`Encoding constructor arguments: ${args['constructor-args']}`)
-      constructorArgs = encodeConstructorArgs(args['constructor-args'])
+      constructorArgs = encodeConstructorArgs(args['constructor-args'], contractName)
     }
     
     // Determine compiler version (matching the contract pragma)
